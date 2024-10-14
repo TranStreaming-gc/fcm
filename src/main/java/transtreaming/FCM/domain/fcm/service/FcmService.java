@@ -20,17 +20,26 @@ public class FcmService {
     private final FcmHelper fcmHelper;
     private final FcmValidate fcmValidate;
 
-    //token 받아서 처리
+    // token 받아서 처리
     public void postFcm(AlarmReqDto alarmReqDto) throws FirebaseMessagingException {
-        alarmReqDto.token().forEach(fcmValidate::existsByToken);
-        log.info("token = {}", alarmReqDto.token());
+        // null 체크 추가
+        List<String> tokens = alarmReqDto.token();
+        if (tokens == null || tokens.isEmpty()) {
+            log.error("No FCM tokens provided.");
+            throw new IllegalArgumentException("FCM token list cannot be null or empty.");
+        }
+
+        // 토큰 유효성 검사
+        tokens.forEach(fcmValidate::existsByToken);
+        log.info("tokens = {}", tokens);
+
         // MulticastMessage를 생성하여 여러 토큰에 전송
         MulticastMessage message = MulticastMessage.builder()
                 .setNotification(Notification.builder()
                         .setTitle("test")
                         .setBody("testMessage")
                         .build())
-                .addAllTokens(alarmReqDto.token())
+                .addAllTokens(tokens)
                 .build();
 
         // 비동기 방식으로 메시지 전송
