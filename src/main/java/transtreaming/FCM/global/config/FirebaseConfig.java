@@ -15,7 +15,7 @@ public class FirebaseConfig {
     public void ini() {
         try {
             InputStream serviceAccount =
-                    new ClassPathResource("firebase-adminsdk.json")
+                    new ClassPathResource("k-pass-92025-firebase-adminsdk-ssn5d-d957d873bd.json")
                     .getInputStream();
 
             FirebaseOptions options = FirebaseOptions.builder()  // Deprecated된 부분 수정

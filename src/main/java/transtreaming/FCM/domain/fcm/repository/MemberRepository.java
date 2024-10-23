@@ -5,7 +5,7 @@ import transtreaming.FCM.domain.fcm.entity.Member;
 
 import java.util.Optional;
 
-public interface MemberRepository extends JpaRepository<Member, Long> {
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberQueryRepository {
 
     Optional<Member> findByToken(String token);
 

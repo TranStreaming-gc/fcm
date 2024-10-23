@@ -5,12 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import transtreaming.FCM.domain.fcm.dto.req.AlarmReqDto;
+import transtreaming.FCM.domain.fcm.dto.info.TokenInfo;
+import transtreaming.FCM.domain.fcm.dto.req.MessageReqDto;
 import transtreaming.FCM.domain.fcm.helper.FcmHelper;
 import transtreaming.FCM.domain.fcm.validate.FcmValidate;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -21,23 +21,19 @@ public class FcmService {
     private final FcmValidate fcmValidate;
 
     // token 받아서 처리
-    public void postFcm(AlarmReqDto alarmReqDto) throws FirebaseMessagingException {
-        // null 체크 추가
-        List<String> tokens = alarmReqDto.token();
-        if (tokens == null || tokens.isEmpty()) {
-            log.error("No FCM tokens provided.");
-            throw new IllegalArgumentException("FCM token list cannot be null or empty.");
-        }
-
-        // 토큰 유효성 검사
-        tokens.forEach(fcmValidate::existsByToken);
+    public void postFcm(MessageReqDto messageReqDto) throws FirebaseMessagingException {
+        log.info("region = {}", messageReqDto.region());
+        List<TokenInfo> tokenInfos = fcmHelper.findByRegion(messageReqDto.region());
+        List<String> tokens = tokenInfos.stream()
+                .map(TokenInfo::token) // TokenInfo의 token 필드를 추출
+                .toList();
         log.info("tokens = {}", tokens);
 
         // MulticastMessage를 생성하여 여러 토큰에 전송
         MulticastMessage message = MulticastMessage.builder()
                 .setNotification(Notification.builder()
-                        .setTitle("test")
-                        .setBody("testMessage")
+                        .setTitle(messageReqDto.title())
+                        .setBody(messageReqDto.message())
                         .build())
                 .addAllTokens(tokens)
                 .build();

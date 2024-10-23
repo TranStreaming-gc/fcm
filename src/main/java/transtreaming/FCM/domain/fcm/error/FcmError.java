@@ -9,7 +9,9 @@ import transtreaming.FCM.global.error.code.ErrorCode;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public enum FcmError implements ErrorCode {
-    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "Member Not Found");
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "Member Not Found"),
+    TOKEN_NULL(HttpStatus.BAD_REQUEST, "Token is Null"),
+    JSON_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "JSON Format Error");
 
     private final HttpStatus httpStatus;
     private final String message;

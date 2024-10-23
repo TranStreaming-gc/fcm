@@ -16,4 +16,7 @@ public class Member {
 
     @Column(name = "token", nullable = false)
     private String token;
+
+    @Column(name = "region", nullable = false)
+    private String region;
 }

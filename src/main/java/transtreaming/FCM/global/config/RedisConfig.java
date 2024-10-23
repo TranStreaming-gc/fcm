@@ -5,10 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
-import transtreaming.FCM.global.redis.RedisListener;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
+import transtreaming.FCM.domain.fcm.redis.RedisSubscribeListener;
 
 @Configuration
 public class RedisConfig {
@@ -28,16 +30,24 @@ public class RedisConfig {
     }
 
     @Bean
-    RedisMessageListenerContainer container(RedisConnectionFactory connectionFactory,
-            MessageListenerAdapter listenerAdapter) {
-        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
-        container.setConnectionFactory(connectionFactory);
-        container.addMessageListener(listenerAdapter, new PatternTopic(redisChannel)); // 설정된 채널 이름을 사용
-        return container;
+    public RedisTemplate<?, ?> redisTemplate() {
+        RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(String.class));
+        return redisTemplate;
     }
 
     @Bean
-    MessageListenerAdapter listenerAdapter(RedisListener redisListener) {
-        return new MessageListenerAdapter(redisListener);
+    RedisMessageListenerContainer container(RedisSubscribeListener redisSubscribeListener) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(redisConnectionFactory());
+        container.addMessageListener(redisSubscribeListener, new PatternTopic(redisChannel));
+        return container;
     }
+
+//    @Bean
+//    MessageListenerAdapter listenerAdapter(RedisListener redisListener) {
+//        return new MessageListenerAdapter(redisListener);
+//    }
 }
