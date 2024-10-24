@@ -19,6 +19,7 @@ public class RedisPublishListener {
     }
 
     public void publish(ChannelTopic topic, MessageResDto messageResDto) {
+        log.info("channel name = {}", topic.getTopic());
         template.convertAndSend(topic.getTopic(), messageResDto);
     }
 

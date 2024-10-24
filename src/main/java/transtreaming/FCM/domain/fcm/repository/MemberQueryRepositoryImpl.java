@@ -20,7 +20,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository{
                         member.token
                 ))
                 .from(member)
-                .where(member.region.like(region))
+                .where(member.region.like(region + "%"))
                 .fetch();
     }
 }
