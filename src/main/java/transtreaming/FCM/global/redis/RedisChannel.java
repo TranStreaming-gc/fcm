@@ -7,7 +7,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public enum RedisChannel {
-    FCM_CHANNEL("alert");
+    FCM_CHANNEL("alert"),
+    RESPONSE_CHANNEL("response");
 
     private final String channelName;
 }

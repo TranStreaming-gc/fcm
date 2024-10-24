@@ -17,7 +17,7 @@ public class MemberQueryRepositoryImpl implements MemberQueryRepository{
     public List<TokenInfo> findByRegion(String region) {
         return queryFactory.select(
                 Projections.constructor(TokenInfo.class,
-                        member.region
+                        member.token
                 ))
                 .from(member)
                 .where(member.region.like(region))
