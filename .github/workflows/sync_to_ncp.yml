@@ -34,4 +34,5 @@ jobs:
       - name: Mirror push to NCP SourceCommit
         run: |
           echo "Pushing all branches and tags to NCP..."
-          git push --mirror origin || (echo "Push failed. Exiting..." && exit 1)
+          git push origin --all || (echo "Push failed. Exiting..." && exit 1)
+          git push origin --tags || (echo "Push failed. Exiting..." && exit 1)
