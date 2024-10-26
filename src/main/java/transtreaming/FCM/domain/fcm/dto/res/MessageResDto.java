@@ -21,7 +21,7 @@ public record MessageResDto(
         return MessageResDto
                 .builder()
                 .CRT_DT(reqDto.CRT_DT())
-                .CRT_TITLE(reqDto.CRT_TITLE())
+                .CRT_TITLE(reqDto.DST_SE_NM())
                 .MSG_CN(reqDto.MSG_CN())
                 .RCPTN_RGN_NM(reqDto.RCPTN_RGN_NM())
                 .SUCCESS_MSG_COUNT(successMessage)

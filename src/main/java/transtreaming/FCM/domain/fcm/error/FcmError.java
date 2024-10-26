@@ -11,7 +11,8 @@ import transtreaming.FCM.global.error.code.ErrorCode;
 public enum FcmError implements ErrorCode {
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "Member Not Found"),
     TOKEN_NULL(HttpStatus.BAD_REQUEST, "Token is Null"),
-    JSON_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "JSON Format Error");
+    JSON_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "JSON Format Error"),
+    NO_TARGET_USER(HttpStatus.NOT_FOUND, "Not Exist Target User");
 
     private final HttpStatus httpStatus;
     private final String message;

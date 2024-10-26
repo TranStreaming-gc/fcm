@@ -7,20 +7,21 @@ import transtreaming.FCM.domain.fcm.dto.info.TokenInfo;
 
 import java.util.List;
 
-import static transtreaming.FCM.domain.fcm.entity.QMember.member;
+import static transtreaming.FCM.domain.fcm.entity.QUsergps.usergps;
+
 
 @RequiredArgsConstructor
-public class MemberQueryRepositoryImpl implements MemberQueryRepository{
+public class UsergpsQueryRepositoryImpl implements UsergpsQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
     public List<TokenInfo> findByRegion(String region) {
         return queryFactory.select(
                 Projections.constructor(TokenInfo.class,
-                        member.token
+                        usergps.deviceToken
                 ))
-                .from(member)
-                .where(member.region.like(region + "%"))
+                .from(usergps)
+                .where(usergps.address.like(region + "%"))
                 .fetch();
     }
 }

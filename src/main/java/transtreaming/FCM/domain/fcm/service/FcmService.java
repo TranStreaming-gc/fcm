@@ -31,6 +31,7 @@ public class FcmService {
     public void postFcm(MessageReqDto messageReqDto) throws FirebaseMessagingException {
         log.info("region = {}", messageReqDto.RCPTN_RGN_NM());
         List<TokenInfo> tokenInfos = fcmHelper.findByRegion(messageReqDto.RCPTN_RGN_NM());
+        fcmValidate.existsByToken(tokenInfos);
         log.info("member count = {}", tokenInfos.size());
         List<String> tokens = tokenInfos.stream()
                 .map(TokenInfo::token) // TokenInfo의 token 필드를 추출
@@ -40,7 +41,7 @@ public class FcmService {
         // MulticastMessage를 생성하여 여러 토큰에 전송
         MulticastMessage message = MulticastMessage.builder()
                 .setNotification(Notification.builder()
-                        .setTitle(messageReqDto.CRT_TITLE())
+                        .setTitle(messageReqDto.DST_SE_NM())
                         .setBody(messageReqDto.MSG_CN() + "(" + messageReqDto.CRT_DT() + ")")
                         .build())
                 .addAllTokens(tokens)

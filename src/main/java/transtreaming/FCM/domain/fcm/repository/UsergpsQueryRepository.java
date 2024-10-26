@@ -4,7 +4,7 @@ import transtreaming.FCM.domain.fcm.dto.info.TokenInfo;
 
 import java.util.List;
 
-public interface MemberQueryRepository {
+public interface UsergpsQueryRepository {
 
     List<TokenInfo> findByRegion(String region);
 }
