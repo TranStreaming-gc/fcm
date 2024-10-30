@@ -1,6 +1,10 @@
 # 1. Build Stage - Gradle 빌드 수행
 FROM eclipse-temurin:21-jdk AS builder
 
+# JAVA_HOME 환경 변수 설정
+ENV JAVA_HOME=/opt/java/openjdk
+ENV PATH=$JAVA_HOME/bin:$PATH
+
 # 2. 작업 디렉토리 설정
 WORKDIR /app
 
