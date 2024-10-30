@@ -16,7 +16,7 @@ COPY ./gradlew /app/gradlew
 # 4. JAVA_HOME 및 java 경로 확인 (디버깅)
 RUN echo "JAVA_HOME: $JAVA_HOME" && \
     ls -al $JAVA_HOME && \
-    which java && java -version
+    $JAVA_HOME/bin/java -version
 
 # 5. Gradle 의존성 캐시 활용 (의존성만 미리 다운로드)
 RUN chmod +x ./gradlew && JAVA_HOME=$JAVA_HOME ./gradlew dependencies --no-daemon --parallel
