@@ -13,23 +13,28 @@ COPY build.gradle settings.gradle /app/
 COPY gradle /app/gradle
 COPY ./gradlew /app/gradlew
 
-# 4. Gradle 의존성 캐시 활용 (의존성만 미리 다운로드)
+# 4. JAVA_HOME 및 java 경로 확인 (디버깅)
+RUN echo "JAVA_HOME: $JAVA_HOME" && \
+    ls -al $JAVA_HOME && \
+    which java && java -version
+
+# 5. Gradle 의존성 캐시 활용 (의존성만 미리 다운로드)
 RUN chmod +x ./gradlew && JAVA_HOME=$JAVA_HOME ./gradlew dependencies --no-daemon --parallel
 
-# 5. 소스 코드 전체 복사
+# 6. 소스 코드 전체 복사
 COPY . /app
 
-# 6. 빌드 실행 (테스트 제외)
+# 7. 빌드 실행 (테스트 제외)
 RUN ./gradlew clean build -x test --no-daemon --parallel
 
-# 7. Runtime Stage - 최소한의 런타임 이미지 사용
+# 8. Runtime Stage - 최소한의 런타임 이미지 사용
 FROM eclipse-temurin:21-jre-alpine
 
-# 8. 빌드된 JAR 파일 복사
+# 9. 빌드된 JAR 파일 복사
 COPY --from=builder /app/build/libs/*.jar /app/app.jar
 
-# 9. 런타임 포트 설정
+# 10. 런타임 포트 설정
 EXPOSE 8080
 
-# 10. 실행 명령어
+# 11. 실행 명령어
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
