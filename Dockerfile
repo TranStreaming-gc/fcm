@@ -14,7 +14,7 @@ COPY gradle /app/gradle
 COPY ./gradlew /app/gradlew
 
 # 4. Gradle 의존성 캐시 활용 (의존성만 미리 다운로드)
-RUN chmod +x ./gradlew && ./gradlew dependencies --no-daemon --parallel
+RUN chmod +x ./gradlew && JAVA_HOME=$JAVA_HOME ./gradlew dependencies --no-daemon --parallel
 
 # 5. 소스 코드 전체 복사
 COPY . /app
