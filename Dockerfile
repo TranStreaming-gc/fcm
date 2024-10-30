@@ -1,5 +1,7 @@
 # 1. 기본 이미지로 Java 21 사용
 FROM eclipse-temurin:21-jdk AS builder
+ENV JAVA_HOME=/opt/java/openjdk
+ENV PATH=$JAVA_HOME/bin:$PATH
 
 # 2. 작업 디렉토리 설정
 WORKDIR /app
@@ -10,7 +12,8 @@ COPY gradle /app/gradle
 COPY ./gradlew /app/gradlew
 
 # 4. Gradlew에 실행 권한 부여 및 의존성 다운로드
-RUN chmod +x /app/gradlew && ls -l /app/gradlew && ./gradlew dependencies --no-daemon
+RUN echo "Using JAVA_HOME: $JAVA_HOME" && \
+    chmod +x /app/gradlew && /bin/bash ./gradlew dependencies --no-daemon
 
 # 5. 나머지 소스 코드 복사
 COPY . /app
