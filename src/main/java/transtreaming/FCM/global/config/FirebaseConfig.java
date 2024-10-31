@@ -4,21 +4,26 @@ import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 @Configuration
 public class FirebaseConfig {
+
+    @Value("${firebase.config.path}")
+    private String firebaseConfigPath;  // application.yaml에서 경로 읽기
+
     @PostConstruct
     public void ini() {
         try {
-            InputStream serviceAccount =
-                    new ClassPathResource("k-pass-92025-firebase-adminsdk-ssn5d-d957d873bd.json")
-                    .getInputStream();
+            // JSON 파일 경로를 사용하여 InputStream 생성
+            InputStream serviceAccount = Files.newInputStream(Paths.get(firebaseConfigPath));
 
-            FirebaseOptions options = FirebaseOptions.builder()  // Deprecated된 부분 수정
+            FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();
 

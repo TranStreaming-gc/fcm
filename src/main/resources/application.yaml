@@ -1,6 +1,6 @@
 spring:
   application:
-    name: DisasterRecord
+    name: Fcm
   config:
     import: optional:file:.env[.properties]
   datasource:
@@ -8,7 +8,6 @@ spring:
     url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?useSSL=false&serverTimezone=Asia/Seoul&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
     username: ${DB_USER}
     password: ${DB_PASSWORD}
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -17,10 +16,12 @@ spring:
         #show_sql: true
         format_sql: true
         default_batch_fetch_size: 1000
-
-  spring:
   data:
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT}
       channel: ${REDIS_CHANNEL}
+
+firebase:
+  config:
+    path: /app/resources/k-pass-92025-firebase-adminsdk-ssn5d-d957d873bd.json  # 마운트된 JSON 파일 경로
