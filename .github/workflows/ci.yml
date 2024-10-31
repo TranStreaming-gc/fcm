@@ -1,0 +1,54 @@
+name: Build, Update, and Push FCM Image
+
+on:
+  push:
+    branches: ["infra"]
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-update:
+    runs-on: self-hosted
+    name: Build, Update, and Push FCM Image
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Build Docker Image
+        run: |
+          BUILD_VERSION=${{ github.run_number }}
+          docker build -t contest67.kr.ncr.ntruss.com/contents67-fcm:${BUILD_VERSION} .
+
+      - name: Login to Naver Cloud Container Registry (NCR)
+        env:
+          NCR_USERNAME: ${{ secrets.NCR_USERNAME }}
+          NCR_PASSWORD: ${{ secrets.NCR_PASSWORD }}
+        run: |
+          echo $NCR_PASSWORD | docker login contest67.kr.ncr.ntruss.com -u $NCR_USERNAME --password-stdin
+
+      - name: Push Docker Image
+        run: |
+          BUILD_VERSION=${{ github.run_number }}
+          docker push contest67.kr.ncr.ntruss.com/contents67-fcm:${BUILD_VERSION}
+
+      - name: Update Image Version in Deployment File
+        run: |
+          BUILD_VERSION=${{ github.run_number }}
+          sed -i "s|contest67.kr.ncr.ntruss.com/contents67-fcm.*|contest67.kr.ncr.ntruss.com/contents67-fcm:${BUILD_VERSION}|g" ./fcm-deployments.yaml
+
+      - name: Commit and Push Changes to ncp-gitops Repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add ./fcm-deployments.yaml
+          git commit -m "Update FCM image to version ${BUILD_VERSION}"
+          git push origin main
