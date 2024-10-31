@@ -32,6 +32,13 @@ jobs:
           NCR_PASSWORD: ${{ secrets.NCR_PASSWORD }}
         run: |
           echo $NCR_PASSWORD | docker login contest67.kr.ncr.ntruss.com -u $NCR_USERNAME --password-stdin
+      - name: Configure NCR Authentication
+        env:
+          NCR_USERNAME: ${{ secrets.NCR_USERNAME }}
+          NCR_PASSWORD: ${{ secrets.NCR_PASSWORD }}
+        run: |
+          mkdir -p ~/.docker
+          echo '{ "auths": { "contest67.kr.ncr.ntruss.com": { "auth": "'$(echo -n $NCR_USERNAME:$NCR_PASSWORD | base64)'" } } }' > ~/.docker/config.json
 
       - name: Push Docker Image
         run: |
