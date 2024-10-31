@@ -31,17 +31,27 @@ jobs:
           BUILD_VERSION=${{ github.run_number }}
           docker push contest67.kr.ncr.ntruss.com/contents67-fcm:${BUILD_VERSION}
 
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Clone ncp-gitops Repository
+        run: |
+          git clone https://github.com/TranStreaming-gc/ncp-gitops.git
+          cd ncp-gitops
+
       - name: Update Image Version in Deployment File
         run: |
           BUILD_VERSION=${{ github.run_number }}
           sed -i "s|contest67.kr.ncr.ntruss.com/contents67-fcm.*|contest67.kr.ncr.ntruss.com/contents67-fcm:${BUILD_VERSION}|g" ./fcm-deployments.yaml
+        working-directory: ./ncp-gitops
 
       - name: Commit and Push Changes to ncp-gitops Repository
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          cd ncp-gitops
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add ./fcm-deployments.yaml
+          git add fcm-deployments.yaml
           git commit -m "Update FCM image to version ${BUILD_VERSION}"
           git push origin main
