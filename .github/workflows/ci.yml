@@ -26,12 +26,6 @@ jobs:
           BUILD_VERSION=${{ github.run_number }}
           docker build -t contest67.kr.ncr.ntruss.com/contents67-fcm:${BUILD_VERSION} .
 
-      - name: Login to Naver Cloud Container Registry (NCR)
-        env:
-          NCR_USERNAME: ${{ secrets.NCR_USERNAME }}
-          NCR_PASSWORD: ${{ secrets.NCR_PASSWORD }}
-        run: |
-          echo $NCR_PASSWORD | docker login contest67.kr.ncr.ntruss.com -u $NCR_USERNAME --password-stdin
       - name: Configure NCR Authentication
         env:
           NCR_USERNAME: ${{ secrets.NCR_USERNAME }}
