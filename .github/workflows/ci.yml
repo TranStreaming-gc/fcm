@@ -31,12 +31,11 @@ jobs:
           BUILD_VERSION=${{ github.run_number }}
           docker push contest67.kr.ncr.ntruss.com/contents67-fcm:${BUILD_VERSION}
 
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
       - name: Clone ncp-gitops Repository
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git clone https://github.com/TranStreaming-gc/ncp-gitops.git
+          git clone https://$GITHUB_TOKEN@github.com/TranStreaming-gc/ncp-gitops.git
           cd ncp-gitops
 
       - name: Update Image Version in Deployment File
