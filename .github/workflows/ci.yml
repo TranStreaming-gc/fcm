@@ -35,7 +35,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: TranStreaming-gc/ncp-gitops
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.MY_GITHUB_PAT }}
           path: ncp-gitops
 
       - name: Update Image Version in Deployment File
@@ -46,7 +46,7 @@ jobs:
 
       - name: Commit and Push Changes to ncp-gitops Repository
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          MY_GITHUB_PAT: ${{ secrets.MY_GITHUB_PAT }}
         run: |
           cd ncp-gitops
           git config --global user.name "github-actions[bot]"
